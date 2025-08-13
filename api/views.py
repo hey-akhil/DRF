@@ -10,78 +10,21 @@ from students.models import Students
 from employees.models import Employee
 from django.http import Http404
 
-from rest_framework import mixins,generics
 
+from rest_framework import mixins,generics
 class Employees(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
     queryset = Employee.objects.all()
+    serializer_class = EmployeeSerializer
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#------------------------------------------------------------------------------------
-#Employee Model using class view functionality
-
-class Employees(APIView):
-
-    def get(self,request):
-        emp = Employee.objects.all()
-        serializer = EmployeeSerializer(emp, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
+    def get(self, request):
+        return self.list(request)
 
     def post(self,request):
-        serializer = EmployeeSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return self.create(request)
 
+class EmployeesDetailsView(generics.GenericAPIView):
+    pass
 
-class EmployeesDetailsView(APIView):
-    def get_object(self,primary_key):
-        try:
-            return Employee.objects.get(id=primary_key)
-        except Employee.DoesNotExist:
-           raise Http404
-
-    def get(self,request, primary_key):
-        emp = self.get_object(primary_key)
-        serializer = EmployeeSerializer(emp)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def delete(self,request,primary_key):
-        try:
-            emp = self.get_object(primary_key)
-            emp.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        except:
-            return Response(status=status.HTTP_404_NOT_FOUND)
-
-    def post(self,request,primary_key):
-        emp = self.get_object(primary_key)
-        serializer = EmployeeSerializer(emp, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(status=status.HTTP_200_OK)
-        return Response(status=status.HTTP_400_BAD_REQUEST)
-
-#------------------------------------------------------------------------------------
 
 
 
