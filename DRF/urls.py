@@ -25,4 +25,6 @@ urlpatterns = [
     #API End-Points
     path('api/v1/', include('api.urls')),
 
+    path('', include('blogs.urls')),
+
 ]
