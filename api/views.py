@@ -10,9 +10,21 @@ from students.models import Students
 from employees.models import Employee
 from django.http import Http404
 from rest_framework import mixins,generics, viewsets
+from blogs.models import Blog, Comments
+from blogs.serializers import BlogSerializer, CommentSerializer
 
 
+class BlogsView(generics.ListCreateAPIView):
+    queryset = Blog.objects.all()
+    serializer_class = BlogSerializer
 
+class CommentsView(generics.ListCreateAPIView):
+    queryset = Comments.objects.all()
+    serializer_class = CommentSerializer
+
+
+"""
+---------------------------------------------------------------------viewsets.ViewSet
 class EmployeeViewSet(viewsets.ViewSet):
     def list(self,request):
         queryset = Employee.objects.all()
@@ -43,9 +55,7 @@ class EmployeeViewSet(viewsets.ViewSet):
         emp = get_object_or_404(Employee, pk=pk)
         emp.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-
+"""
 
 """
 # Genric >> RetrieveUpdateDestroyAPIView
